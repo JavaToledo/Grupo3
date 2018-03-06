@@ -1,0 +1,70 @@
+import javax.faces.bean.SessionScoped;
+import java.io.Serializable;
+import javax.faces.bean.ManagedBean;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+/**
+ *
+ * @author raexmon
+ */
+@ManagedBean
+@SessionScoped
+public class ManejadorBd implements Serializable {
+
+    static Connection con;
+    
+    public ManejadorBd() {
+        
+    }
+
+    public static Connection conexion() {
+
+	try {
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager
+                    .getConnection("jdbc:mysql://localhost:3306/annexfactura?zeroDateTimeBehavior=convertToNull",
+                                    "Raexmon","Comadreja_23");
+        } catch (ClassNotFoundException | SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return con;
+     }
+    
+
+	public static void close(Connection con) {
+		try {
+			con.close();
+		} catch (Exception ex) {
+		}
+	}
+    
+     static boolean validar(String usuario, String paswword) {
+        con = conexion();
+		PreparedStatement ps = null;
+
+		try {
+			con = conexion();
+			ps = con.prepareStatement("Select usuario, paswword from usuarios where usuario = ? and paswword = ?");
+			ps.setString(1, usuario);
+			ps.setString(2, paswword);
+
+			ResultSet rs = ps.executeQuery();
+
+			if (rs.next()) {
+				//Si encuentra un resultado, valida el input
+				return true;
+			}
+		} catch (SQLException ex) {
+			System.out.println("Error de login -->" + ex.getMessage());
+			return false;
+		} finally {
+			close(con);
+		}
+		return false;
+	
+    }
+}
