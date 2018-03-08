@@ -1,0 +1,48 @@
+package manejadores;
+
+import dao.Usuarios;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import javax.inject.Named;
+import javax.enterprise.context.RequestScoped;
+
+/**
+ *
+ * @author raexm
+ */
+@RequestScoped
+@Named(value="manejadorUsuarios")
+public class ManejadorUsuarios {
+
+    /**
+     * Creates a new instance of ManejadorUsuarios
+     * @param usuario
+     * @param paswword
+     */
+    ManejadorBd mn=new ManejadorBd();
+    static Connection con;
+    
+    public ManejadorUsuarios() {
+        
+    }
+     
+    public String nuevoUsusario(String usuario, String paswword){
+        con=mn.conexion();
+        Usuarios u = new Usuarios();
+        PreparedStatement ps = null;
+        String sql = "INSERT INTO usuarios (usuario, paswword, estado) VALUES (?,?,A)";
+        
+            try{
+            ps=con.prepareStatement(sql);
+            ps.setString(1, u.getUsuario());
+            ps.setString(2, u.getPaswword());
+            ps.execute();
+            return "login";
+            }catch(SQLException ex){
+             return "crearUsuarios";   
+            }
+            
+    }
+    
+}
