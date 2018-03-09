@@ -36,6 +36,13 @@ public class FiltroLogin implements Filter {
 					|| reqURI.indexOf("/public/") >= 0
 					|| reqURI.contains("javax.faces.resource"))
 				chain.doFilter(request, response);
+				
+			else if (reqURI.indexOf("/crearUsuario.xhtml") >= 0
+					|| (ses != null && ses.getAttribute("usuario") != null)
+					|| reqURI.indexOf("/public/") >= 0
+					|| reqURI.contains("javax.faces.resource"))
+				chain.doFilter(request, response);
+				
 			else
 				resp.sendRedirect(reqt.getContextPath() + "/faces/login.xhtml");
 		} catch (Exception e) {
