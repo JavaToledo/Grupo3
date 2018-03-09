@@ -46,7 +46,9 @@ public class FiltroLogin implements Filter {
 			else
 				resp.sendRedirect(reqt.getContextPath() + "/faces/login.xhtml");
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			FacesMessage message = new FacesMessage();
+                        message.setSummary("No sin logearte, colega");
+                        message.setSeverity(FacesMessage.SEVERITY_ERROR);
 		}
 	}
 
